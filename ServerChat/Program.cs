@@ -11,7 +11,7 @@ namespace ConsoleApplication1
     class Program
     {
         public static Hashtable clientsList = new Hashtable();
-      
+
         static void Main(string[] args)
         {
             TcpListener serverSocket = new TcpListener(IPAddress.Any, 8888);
@@ -63,9 +63,9 @@ namespace ConsoleApplication1
                 broadcastStream.Write(broadcastBytes, 0, broadcastBytes.Length);
                 broadcastStream.Flush();
             }
-        }  
+        }
     }
-    
+
 
 
 

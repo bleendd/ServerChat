@@ -15,6 +15,7 @@ namespace ServerChat
         TcpClient clientSocket;
         string clNo;
         Hashtable clientsList;
+        bool bClosed = false;
 
         public void startClient(TcpClient inClientSocket, string clineNo, Hashtable cList)
         {
@@ -30,24 +31,27 @@ namespace ServerChat
             byte[] bytesFrom = new byte[4096];
             string dataFromClient = null;
 
-            while (true)
+            while (clientSocket.Connected)
             {
+                NetworkStream networkStream = clientSocket.GetStream();
                 try
                 {
-                    NetworkStream networkStream = clientSocket.GetStream();
                     networkStream.Read(bytesFrom, 0, 4096);
-                    dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
-                    dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
-                    Console.WriteLine("Nga - " + clNo + ": " + dataFromClient);
-
-                    Program.broadcast(dataFromClient, clNo, true);
-
                 }
-                catch (Exception ex)
+                catch ( Exception ex)
                 {
-                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine( clNo + " u shkeput nga lidhja!");
+                    Program.clientsList.Remove(clNo);
+                    break;
                 }
+                dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
+                dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
+                Console.WriteLine("Nga - " + clNo + ": " + dataFromClient);
+
+                Program.broadcast(dataFromClient, clNo, true);
+
             }
         }
+
     }
 }
